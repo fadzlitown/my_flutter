@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       /// below telling flutter to have a single instance of Counter cubit to make it available inside the material widget
       ///
       /// Defining here means it's GLOBALLY ACCESS across ALL OF SCREENS inside MATERIAL APP
+      /// created CounterTestCubit() --> used in FIRST & SECOND SCREENS, THIRD SCREEN has a specific BlocProvider Cubit State
     create: (context) => CounterTestCubit(),
       child: MaterialApp(
         //Inside MaterialApp() provides the routes !

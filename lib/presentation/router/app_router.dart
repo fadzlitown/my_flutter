@@ -7,8 +7,9 @@ import 'package:flutter_practices/presentation/screens/second_screen.dart';
 import 'package:flutter_practices/presentation/screens/third_screen.dart';
 
 class AppRouter {
-  /// USE this CUBIT/BLOC instance below if you want to provde to a SINGLE / MORE screen or any SPECIFIC SCREENS
-  /// by using BlocProvider.value(value: _counterCubit, child..) on the SCREEN WIDGET
+  /// USE this CUBIT/BLOC instance below if you want to provide to a SINGLE / MORE screen or any SPECIFIC SCREENS
+  /// eg. using BlocProvider.value(value: _counterCubit, child..) on the SCREEN WIDGET.
+  /// CounterTestCubit() global state -> used in FIRST & SECOND SCREENS but THIRD SCREEN has a specific BlocProvider.value state below _counterCubit
   var _counterCubit = CounterTestCubit();
 
   Route onGenerateRoute(RouteSettings settings) {
@@ -37,8 +38,8 @@ class AppRouter {
         break;
       case '/3':
 
-        /// (_) identifier meaning it's private to its library.
         return MaterialPageRoute(builder: (_) {
+          ///THIRD SCREEN has a specific BlocProvider.value state stored in _counterCubit
           return BlocProvider.value(
             value: _counterCubit,
             child: ThirdScreen(title: 'Third Screen', colorApp: Colors.amber),
