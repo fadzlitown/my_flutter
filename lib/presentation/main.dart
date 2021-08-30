@@ -12,11 +12,11 @@ void main() {
 class MyApp extends StatelessWidget {
   ///StatefulWidget LIFECYCLE. #https://flutterbyexample.com/lesson/stateful-widget-lifecycle
   /// Flutter is instructed to build a StatefulWidget, it immediately calls createState(). This method must exist. like ==onCreate() android
+  final AppRouter _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
     log("_MyAppState: build UI");
-    var _appRouter = AppRouter();
 
     //shortcut Bloc Alt + Enter
     return BlocProvider<CounterTestCubit>(
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       ///
       /// Defining here means it's GLOBALLY ACCESS across ALL OF SCREENS inside MATERIAL APP
       /// created CounterTestCubit() --> used in FIRST & SECOND SCREENS, THIRD SCREEN has a specific BlocProvider Cubit State
-    create: (context) => CounterTestCubit(),
+      create: (context) => CounterTestCubit(),
       child: MaterialApp(
         //Inside MaterialApp() provides the routes !
         title: 'Flutter Demo',
