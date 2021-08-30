@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_practices/const/enums.dart';
 import 'package:flutter_practices/logic/internet_cubit.dart';
 import 'package:meta/meta.dart';
 
@@ -14,6 +15,13 @@ class CounterTestCubit extends Cubit<CounterTestState> {
   CounterTestCubit({@required this.internetCubit})
       : super(CounterTestState(counterValue: 0, totalMultiplyByTwo: 0)) {
     /// need to subscribe InternetCubit (listen to it)
+    monitorInternetCubit();
+  }
+
+  @override
+  Future<Function> close() {
+    streamSubscription.cancel();
+    super.close();
   }
 
   void increment() => emit(CounterTestState(
@@ -43,5 +51,17 @@ class CounterTestCubit extends Cubit<CounterTestState> {
   @override
   void onChange(Change<CounterTestState> change) {
     log("CounterTestCubit: onChange");
+  }
+
+  Future<StreamSubscription<InternetState>> monitorInternetCubit() async {
+    streamSubscription = internetCubit.listen((state) {
+      if (state is InternetConnected &&
+          state.connectionType == ConnectionType.WIFI) {
+        increment();
+      } else if (state is InternetConnected &&
+          state.connectionType == ConnectionType.MOBILE) {
+        decrement();
+      }
+    });
   }
 }
