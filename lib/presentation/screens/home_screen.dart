@@ -1,50 +1,26 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_practices/cubit_test/counter_test_cubit.dart';
+import 'package:flutter_practices/logic/cubit_test/counter_test_cubit.dart';
 
-import 'cubit/counter_cubit.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    //shortcut Bloc Alt + Enter
-    //below telling flutter to have a single instance of Counter cubit to make it avaible iniside the material widget
-    return BlocProvider<CounterTestCubit>(
-      create: (context) => CounterTestCubit(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: BlocProvider<CounterCubit>(
-          create: (context) => CounterCubit(),
-          child: MyHomePage(title: 'Flutter Demo Home Page'),
-        ),
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title, this.total}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key key, this.title, this.total, this.color}) : super(key: key);
 
   final String title;
   final String total;
+  final Color color;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // To access HomeScreen variable, needs to use widget.variableName
+        backgroundColor: widget.color,
         title: Text(widget.title),
       ),
       body: Center(
@@ -90,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     //BlocProvider = what is the user / UI action to a func or event
                     BlocProvider.of<CounterTestCubit>(context).increment();
                     // BlocProvider.of<CounterCubit>(context).increment();
-                    // context.bloc<CounterCubit>().increment();
+                    // context.bloc<CounterCubit>().increment(); (deprecated) -> LOCAL ACCESS = this instance of bloc/cubit only in A SINGLE SCREEN)
                   },
                   tooltip: 'Increment',
                   child: Icon(Icons.add),
@@ -102,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                     tooltip: 'X 2',
                     child: Text('x 2')),
+
                 // BlocBuilder + BlocListener = BlocConsumer (will be re-building the UI after the func / event states has changed
                 BlocConsumer<CounterTestCubit, CounterTestState>(
                   listener: (context, state) {
@@ -113,6 +90,36 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ],
             ),
+            SizedBox(
+              height: 30,
+            ),
+            MaterialButton(
+                onPressed: () {
+                  //note 1: below is an ANONYMOUS ROUTING w/o a name
+                  // Navigator.of(context)
+                  //     .push(MaterialPageRoute(builder: (newContext) {
+                  //   return SecondScreen(title: 'Second Screen', colorApp: Colors.blueGrey,);}));
+
+                  //note 2: below is an NAMED ROUTING
+                  Navigator.of(context).pushNamed('/2');
+                },
+                color: Colors.red,
+                child: Text('Go to second screen')),
+            SizedBox(
+              height: 30,
+            ),
+            MaterialButton(
+                onPressed: () {
+                  //note 1: below is an ANONYMOUS ROUTING w/o a name
+                  // Navigator.of(context)
+                  //     .push(MaterialPageRoute(builder: (newContext) {
+                  //   return SecondScreen(title: 'Second Screen', colorApp: Colors.blueGrey,);}));
+
+                  //note 2: below is an NAMED ROUTING
+                  Navigator.of(context).pushNamed('/3');
+                },
+                color: Colors.red,
+                child: Text('Go to third screen'))
           ],
         ),
       ),

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -17,11 +20,27 @@ class CounterTestCubit extends Cubit<CounterTestState> {
       wasIncremented: false,
       totalMultiplyByTwo: state.totalMultiplyByTwo));
 
+  void clearValue() {
+    return emit(CounterTestState(
+        counterValue: 0, wasIncremented: false, totalMultiplyByTwo: 0));
+  }
+
   void multiply() {
     int total = state.counterValue * 2;
     return emit(CounterTestState(
         counterValue: state.counterValue,
         wasIncremented: true,
         totalMultiplyByTwo: total));
+  }
+
+  //every time trigger func / event & state update (rebuild UI)  this callback will be called
+  @override
+  void onChange(Change<CounterTestState> change) {
+    log("CounterTestCubit: onChange");
+  }
+
+  @override
+  Future<Function> close() {
+    log("CounterTestCubit: close");
   }
 }
