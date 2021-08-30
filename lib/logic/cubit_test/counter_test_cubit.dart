@@ -2,13 +2,26 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_practices/const/enums.dart';
+import 'package:flutter_practices/logic/internet_cubit.dart';
 import 'package:meta/meta.dart';
 
 part 'counter_test_state.dart';
 
 class CounterTestCubit extends Cubit<CounterTestState> {
-  CounterTestCubit()
-      : super(CounterTestState(counterValue: 0, totalMultiplyByTwo: 0));
+  final InternetCubit internetCubit;
+  StreamSubscription streamSubscription;
+
+  CounterTestCubit({@required this.internetCubit}) :super(CounterTestState(counterValue: 0, totalMultiplyByTwo: 0)){
+    /// need to subscribe InternetCubit (listen to it)
+    streamSubscription = internetCubit.listen((curState) {
+      if(curState is InternetConnected && curState.connectionType == ConnectionType.WIFI){
+        increment();
+      } else if(curState is InternetConnected && curState.connectionType == ConnectionType.MOBILE){
+        decrement();
+      }
+    })
+  };
 
   void increment() => emit(CounterTestState(
       counterValue: state.counterValue + 1,
@@ -33,14 +46,19 @@ class CounterTestCubit extends Cubit<CounterTestState> {
         totalMultiplyByTwo: total));
   }
 
+  @override
+  Future<Function> close() {
+    /// everytime init the streamSubscription, then need to cancel it
+    streamSubscription.cancel();
+    log("CounterTestCubit: close");
+    super.close()
+  }
+
   //every time trigger func / event & state update (rebuild UI)  this callback will be called
   @override
   void onChange(Change<CounterTestState> change) {
     log("CounterTestCubit: onChange");
   }
 
-  @override
-  Future<Function> close() {
-    log("CounterTestCubit: close");
-  }
+
 }
