@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_practices/const/enums.dart';
 import 'package:flutter_practices/logic/cubit_test/counter_test_cubit.dart';
+import 'package:flutter_practices/logic/internet_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.title, this.total, this.color}) : super(key: key);
@@ -27,10 +29,32 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-
+            BlocBuilder<InternetCubit, InternetState>(
+                builder: (context, state) {
+              if (state is InternetConnected &&
+                  state.connectionType == ConnectionType.WIFI) {
+                return Text('Wi-Fi',
+                    style: Theme.of(context).textTheme.headline3.copyWith(
+                          color: Colors.green,
+                        ));
+              } else if (state is InternetConnected &&
+                  state.connectionType == ConnectionType.MOBILE) {
+                return Text(
+                  'Mobile',
+                  style: Theme.of(context).textTheme.headline3.copyWith(
+                        color: Colors.red,
+                      ),
+                );
+              } else if (state is InternetDisconnected) {
+                return Text(
+                  'Disconnected',
+                  style: Theme.of(context).textTheme.headline3.copyWith(
+                        color: Colors.grey,
+                      ),
+                );
+              }
+              return CircularProgressIndicator();
+            }),
             //only wrap the intent widget only !! NOT THE WHOLE BODY / Column
             // BlocBuilder + BlocListener = BlocConsumer (will be re-building the UI after the func / event states has changed
             BlocConsumer<CounterTestCubit, CounterTestState>(

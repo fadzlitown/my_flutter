@@ -15,7 +15,7 @@ class InternetCubit extends Cubit<InternetState> {
   StreamSubscription connectivityStreamSubscription;
 
   InternetCubit({@required this.connectivity}) : super(InternetLoader()) {
-    monitorInternetCubit();
+    monitorInternetConnection();
   }
 
   @override
@@ -24,14 +24,14 @@ class InternetCubit extends Cubit<InternetState> {
     return super.close();
   }
 
-  StreamSubscription<ConnectivityResult> monitorInternetCubit() {
+  StreamSubscription<ConnectivityResult> monitorInternetConnection() {
     return connectivityStreamSubscription =
-        connectivity.onConnectivityChanged.listen((event) {
-      if (event == ConnectionType.WIFI) {
+        connectivity.onConnectivityChanged.listen((connectivityResult) {
+      if (connectivityResult == ConnectivityResult.wifi) {
         emit(InternetConnected(connectionType: ConnectionType.WIFI));
-      } else if (event == ConnectionType.MOBILE) {
+      } else if (connectivityResult == ConnectivityResult.mobile) {
         emit(InternetConnected(connectionType: ConnectionType.MOBILE));
-      } else if (event == ConnectionType.NONE) {
+      } else if (connectivityResult == ConnectivityResult.none) {
         emit(InternetDisconnected());
       }
     });
