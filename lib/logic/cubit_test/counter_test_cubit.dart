@@ -7,7 +7,6 @@ part 'counter_test_state.dart';
 
 class CounterTestCubit extends Cubit<CounterTestState> {
   // final InternetCubit internetCubit;
-  // StreamSubscription streamSubscription;
 
   CounterTestCubit()
       : super(CounterTestState(counterValue: 0, totalMultiplyByTwo: 0)) {

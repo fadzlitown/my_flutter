@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
     /// this is sample of single BlocProvider return BlocProvider<CounterTestCubit>(
 
     /// this is sample of MultiBlocProvider
+    /// provide these PROVIDERS GLOBALLY inside the app. hence it can access from any screens / widgets
     return MultiBlocProvider(
       providers: [
         BlocProvider<InternetCubit>(
