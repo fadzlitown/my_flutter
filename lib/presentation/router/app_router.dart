@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practices/logic/cubit_test/counter_test_cubit.dart';
 import 'package:flutter_practices/presentation/screens/home_screen.dart';
 import 'package:flutter_practices/presentation/screens/second_screen.dart';
+import 'package:flutter_practices/presentation/screens/setting_screen.dart';
 import 'package:flutter_practices/presentation/screens/third_screen.dart';
 
 class AppRouter {
@@ -37,7 +38,6 @@ class AppRouter {
         });
         break;
       case '/3':
-
         return MaterialPageRoute(builder: (_) {
           ///THIRD SCREEN has a specific BlocProvider.value state stored in _counterCubit
           return BlocProvider.value(
@@ -46,6 +46,10 @@ class AppRouter {
           );
         });
         break;
+      case '/settings':
+        return MaterialPageRoute(
+          builder: (_) => SettingScreen(),
+        );
       default:
         return null;
     }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_practices/logic/cubit_test/counter_test_cubit.dart';
 import 'package:flutter_practices/logic/internet_cubit.dart';
+import 'package:flutter_practices/logic/setting_cubit.dart';
 import 'package:flutter_practices/presentation/router/app_router.dart';
 
 void main() {
@@ -36,16 +37,19 @@ class MyApp extends StatelessWidget {
     /// provide these PROVIDERS GLOBALLY inside the app. hence it can access from any screens / widgets
     return MultiBlocProvider(
       providers: [
+        /// below telling flutter to have a single instance of Counter cubit to make it available inside the material widget
+        ///
+        /// Defining here means it's GLOBALLY ACCESS across ALL OF SCREENS inside MATERIAL APP
+        /// created CounterTestCubit() --> used in FIRST & SECOND SCREENS, THIRD SCREEN has a specific BlocProvider Cubit State
         BlocProvider<InternetCubit>(
-          /// below telling flutter to have a single instance of Counter cubit to make it available inside the material widget
-          ///
-          /// Defining here means it's GLOBALLY ACCESS across ALL OF SCREENS inside MATERIAL APP
-          /// created CounterTestCubit() --> used in FIRST & SECOND SCREENS, THIRD SCREEN has a specific BlocProvider Cubit State
           create: (internetCubitContext) =>
               InternetCubit(connectivity: connectivity),
         ),
         BlocProvider<CounterTestCubit>(
           create: (counterCubitContext) => CounterTestCubit(),
+        ),
+        BlocProvider<SettingCubit>(
+          create: (settingContext) => SettingCubit(),
         ),
       ],
       child: MaterialApp(

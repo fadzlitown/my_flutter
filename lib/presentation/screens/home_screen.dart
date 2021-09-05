@@ -215,7 +215,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.of(context).pushNamed('/3');
                   },
                   color: Colors.red,
-                  child: Text('Go to third screen'))
+                  child: Text('Go to third screen')),
+              SizedBox(
+                height: 20,
+              ),
+              MaterialButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/settings');
+                  },
+                  color: Colors.red,
+                  child: Text('Go to Setting screen'))
             ],
           ),
         ),
