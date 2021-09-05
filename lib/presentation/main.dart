@@ -8,6 +8,8 @@ import 'package:flutter_practices/logic/internet_cubit.dart';
 import 'package:flutter_practices/presentation/router/app_router.dart';
 
 void main() {
+  /// runApp() -> start rendering an app & run the widget tree
+  /// MyApp is a ROOT WIDGET
   runApp(MyApp(
     connectivity: Connectivity(),
     appRouter: AppRouter(),
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext myAppContext) {
     log("_MyAppState: build UI");
 
     //shortcut Bloc Alt + Enter
@@ -39,10 +41,11 @@ class MyApp extends StatelessWidget {
           ///
           /// Defining here means it's GLOBALLY ACCESS across ALL OF SCREENS inside MATERIAL APP
           /// created CounterTestCubit() --> used in FIRST & SECOND SCREENS, THIRD SCREEN has a specific BlocProvider Cubit State
-          create: (context) => InternetCubit(connectivity: connectivity),
+          create: (internetCubitContext) =>
+              InternetCubit(connectivity: connectivity),
         ),
         BlocProvider<CounterTestCubit>(
-          create: (context) => CounterTestCubit(),
+          create: (counterCubitContext) => CounterTestCubit(),
         ),
       ],
       child: MaterialApp(

@@ -21,13 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     //ALTERNATIVE OF STREAM --> use LISTENER: base on state update the logic cubit value
     return BlocListener<InternetCubit, InternetState>(
-      listener: (context, state) {
+      listener: (contextBuilder, state) {
         if (state is InternetConnected &&
             state.connectionType == ConnectionType.WIFI) {
-          BlocProvider.of<CounterTestCubit>(context).increment();
+          BlocProvider.of<CounterTestCubit>(contextBuilder).increment();
         } else if (state is InternetConnected &&
             state.connectionType == ConnectionType.MOBILE) {
-          BlocProvider.of<CounterTestCubit>(context).decrement();
+          BlocProvider.of<CounterTestCubit>(contextBuilder).decrement();
         } else if (state is InternetDisconnected) {}
       },
       child: Scaffold(
