@@ -27,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
           BlocProvider.of<CounterTestCubit>(contextBuilder).increment();
         } else if (state is InternetConnected &&
             state.connectionType == ConnectionType.MOBILE) {
+          ///deprecated
+          // context.bloc<CounterTestCubit>().increment();
           BlocProvider.of<CounterTestCubit>(contextBuilder).decrement();
         } else if (state is InternetDisconnected) {}
       },
@@ -78,11 +80,66 @@ class _HomeScreenState extends State<HomeScreen> {
                         : 'Decrement'),
                     duration: Duration(milliseconds: 500)));
               }, builder: (context, state) {
-                return Text(state.counterValue.toString());
+                return Text('BlocConsumer: ' + state.counterValue.toString());
               }),
               SizedBox(
                 height: 24,
               ),
+
+              /// USED WATCH() inside the Builder context !!
+              ///when a new state emitted by Bloc / CounterTestCubit / InternetCubit, this watch will be triggered & rebuild UI
+              /// builderContext.watch() equals definition of BlocBuilder
+              Builder(builder: (builderContext) {
+                final counterState =
+                    builderContext.watch<CounterTestCubit>().state;
+
+                ///get current [state].
+                final internetState =
+                    builderContext.watch<InternetCubit>().state;
+                if (internetState is InternetConnected &&
+                    internetState.connectionType == ConnectionType.MOBILE) {
+                  return Text(
+                    'WATCH: Counter ' +
+                        counterState.counterValue.toString() +
+                        ' Internet: Mobile',
+                    style: Theme.of(context).textTheme.headline6.copyWith(
+                          color: Colors.black,
+                        ),
+                  );
+                } else if (internetState is InternetConnected &&
+                    internetState.connectionType == ConnectionType.WIFI) {
+                  return Text(
+                      'WATCH: Counter ' +
+                          counterState.counterValue.toString() +
+                          ' Internet: Wi-Fi',
+                      style: Theme.of(context).textTheme.headline6.copyWith(
+                            color: Colors.black,
+                          ));
+                } else {
+                  return Text(
+                    'WATCH: Counter ' +
+                        counterState.counterValue.toString() +
+                        ' Disconnected',
+                    style: Theme.of(context).textTheme.headline6.copyWith(
+                          color: Colors.black,
+                        ),
+                  );
+                }
+
+                return Text("data");
+              }),
+
+              SizedBox(height: 25),
+
+              /// USED SELECT() inside the Builder !!
+              /// For SIMPLER field update --> can used select()
+              /// For COMPLEX conditions--> can still remain using BlocBuilder & buildWhen()
+              Builder(builder: (builderContext) {
+                final counterVal = builderContext
+                    .select((CounterTestCubit bloc) => bloc.state.counterValue);
+
+                return Text('SELECT: Counter: ' + counterVal.toString());
+              }),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -90,9 +147,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     heroTag: Text('${widget.title}'),
                     onPressed: () {
                       //BlocProvider = what is the user / UI action to a func or event
-                      BlocProvider.of<CounterTestCubit>(context).decrement();
+                      // BlocProvider.of<CounterTestCubit>(context).decrement();
                       // BlocProvider.of<CounterCubit>(context).decrement();
-                      // context.bloc<CounterCubit>().decrement();
+                      ///Updated in Bloc 6.1.0
+                      context.read<CounterTestCubit>().decrement();
                     },
                     tooltip: 'Decrement',
                     child: Icon(Icons.remove),
@@ -101,9 +159,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     heroTag: Text('${widget.title} #2'),
                     onPressed: () {
                       //BlocProvider = what is the user / UI action to a func or event
-                      BlocProvider.of<CounterTestCubit>(context).increment();
-                      // BlocProvider.of<CounterCubit>(context).increment();
+                      // BlocProvider.of<CounterTestCubit>(context).increment();
                       // context.bloc<CounterCubit>().increment(); (deprecated) -> LOCAL ACCESS = this instance of bloc/cubit only in A SINGLE SCREEN)
+                      ///Updated in Bloc 6.1.0
+                      context.read<CounterTestCubit>().increment();
                     },
                     tooltip: 'Increment',
                     child: Icon(Icons.add),
