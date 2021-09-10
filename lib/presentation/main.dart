@@ -7,8 +7,17 @@ import 'package:flutter_practices/logic/cubit_test/counter_test_cubit.dart';
 import 'package:flutter_practices/logic/internet_cubit.dart';
 import 'package:flutter_practices/logic/setting_cubit.dart';
 import 'package:flutter_practices/presentation/router/app_router.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  ///Here is like a Application level of native android
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: await getApplicationDocumentsDirectory());
+
   /// runApp() -> start rendering an app & run the widget tree
   /// MyApp is a ROOT WIDGET
   runApp(MyApp(

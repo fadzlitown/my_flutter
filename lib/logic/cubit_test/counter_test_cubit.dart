@@ -1,18 +1,17 @@
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'counter_test_state.dart';
 
-class CounterTestCubit extends Cubit<CounterTestState> {
+class CounterTestCubit extends Cubit<CounterTestState> with HydratedMixin {
   // final InternetCubit internetCubit;
 
   CounterTestCubit()
-      : super(CounterTestState(counterValue: 0, totalMultiplyByTwo: 0)) {
-    /// need to subscribe InternetCubit (listen to it)
-    // monitorInternetCubit();
-  }
+      : super(CounterTestState(
+            counterValue: 0, wasIncremented: false, totalMultiplyByTwo: 0));
 
   // => equals to return
   void increment() {
@@ -28,8 +27,7 @@ class CounterTestCubit extends Cubit<CounterTestState> {
       totalMultiplyByTwo: state.totalMultiplyByTwo));
 
   void clearValue() {
-    return emit(CounterTestState(
-        counterValue: 0, wasIncremented: false, totalMultiplyByTwo: 0));
+    return emit(CounterTestState(counterValue: 0, wasIncremented: false));
   }
 
   void multiply() {
@@ -41,8 +39,22 @@ class CounterTestCubit extends Cubit<CounterTestState> {
   }
 
   //every time trigger func / event & state update (rebuild UI)  this callback will be called
+  /// NOTED !!!! ISSUE FOUND IN PACKAGE DEPENDENCY
+  /// cannot used log() if implement with HydratedMixin
+  // @override
+  // void onChange(Change<CounterTestState> change) {
+  //   log("CounterTestCubit: onChange");
+  // }
+
   @override
-  void onChange(Change<CounterTestState> change) {
-    log("CounterTestCubit: onChange");
+  CounterTestState fromJson(Map<String, dynamic> json) {
+    /// called everytime app needs stored data
+    return CounterTestState.fromMap(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson(CounterTestState state) {
+    /// called for every states
+    return state.toMap();
   }
 }
