@@ -7,6 +7,7 @@ import 'package:flutter_practices/logic/cubit_test/counter_test_cubit.dart';
 import 'package:flutter_practices/logic/internet_cubit.dart';
 import 'package:flutter_practices/logic/setting_cubit.dart';
 import 'package:flutter_practices/presentation/router/app_router.dart';
+import 'package:flutter_practices/utility/AppBlocObserver.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -17,6 +18,9 @@ void main() async {
 
   HydratedBloc.storage = await HydratedStorage.build(
       storageDirectory: await getApplicationDocumentsDirectory());
+
+  ///global init debugging here
+  Bloc.observer = AppBlocObserver();
 
   /// runApp() -> start rendering an app & run the widget tree
   /// MyApp is a ROOT WIDGET
@@ -59,6 +63,18 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<SettingCubit>(
           create: (settingContext) => SettingCubit(),
+
+          /// responsible for creating the Bloc or Cubit and a child which will have access
+          /// to the instance via BlocProvider.of(context)
+          ///
+          /// if lazy is true / remove the lazy by default --> this SettingCubit will be only create only if app go to this page. otherwise, it will created every time
+
+          /// (lazy: true / without lazy keyword) - NO SettingCubit instance is being call
+          /// I/flutter (30222): Instance of 'CounterTestCubit' & 'InternetCubit'
+          ///
+          /// (lazy: false) - SettingCubit instance will be called
+          /// I/flutter (30222): Instance of 'CounterTestCubit', 'InternetCubit' & 'SettingCubit'
+          lazy: true,
         ),
       ],
       child: MaterialApp(

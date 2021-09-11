@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 part 'counter_test_state.dart';
 
-class CounterTestCubit extends Bloc<CounterTestState> with HydratedMixin {
+class CounterTestCubit extends Cubit<CounterTestState> with HydratedMixin {
   // final InternetCubit internetCubit;
 
   CounterTestCubit()
